@@ -17,8 +17,8 @@ var app = express();
 
 
 
-
-app.use(logger("dev"));
+var logInstance = logger("dev");
+app.use(logInstance);
 
 app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -29,10 +29,14 @@ mongoose.Promise = Promise;
 mongoose.connect("mongodb://localhost/week18Populater");
 
 // Routes
+console.log('hello test')
 
 // A GET route for scraping the echojs website
+console.log('test1')
 app.get("/scrape", function(req, res) {
   console.log("Hello Word")
+
+  //axios.post("google.com", {})
   // First, we grab the body of the html with request
   axios.get("http://www.aaii.com/journal/article3/tweedy-browne-what-has-worked-in-investing-2?viewall=true").then(function(response) {
     // Then, we load that into cheerio and save it to $ for a shorthand selector
@@ -41,17 +45,14 @@ app.get("/scrape", function(req, res) {
     console.log($)
 
     // Now, we grab every h2 within an article tag, and do the following:
-    $("article h2").each(function(i, element) {
+    $("h2").each(function(i, element) {
       // Save an empty result object
       var result = {};
 
       // Add the text and href of every link, and save them as properties of the result object
       result.title = $(this)
-        .children("a")
         .text();
       result.link = $(this)
-        .children("a")
-        .attr("href");
        console.log(result)
       // Create a new Article using the `result` object built from scraping
       db.Article.create(result)
@@ -69,6 +70,11 @@ app.get("/scrape", function(req, res) {
     res.send("Scrape Complete");
   });
 });
+console.log('test2')
+
+app.post("/scrape", function(req, res){
+  console.log('hello world post')
+})
 
 // Route for getting all Articles from the db
 app.get("/articles", function(req, res) {

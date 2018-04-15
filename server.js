@@ -31,18 +31,26 @@ mongoose.connect("mongodb://localhost/week18Populater");
 // Routes
 console.log('hello test')
 
+app.get("/", function(req, res) {
+  console.log('home route');
+  res.send('alpha');
+});
+
 // A GET route for scraping the echojs website
 console.log('test1')
 app.get("/scrape", function(req, res) {
-  console.log("Hello Word")
+  console.log("GET scrape route triggered")
 
   //axios.post("google.com", {})
   // First, we grab the body of the html with request
-  axios.get("http://www.aaii.com/journal/article3/tweedy-browne-what-has-worked-in-investing-2?viewall=true").then(function(response) {
-    // Then, we load that into cheerio and save it to $ for a shorthand selector
+  var url = 'https://ftalphaville.ft.com/most-popular'
+  axios.get(url).then(function(response) {
+
+    console.log('response from url')
+  // Then, we load that into cheerio and save it to $ for a shorthand selector
     var $ = cheerio.load(response.data);
 
-    console.log($)
+    //console.log($)
 
     // Now, we grab every h2 within an article tag, and do the following:
     $("h2").each(function(i, element) {
@@ -68,6 +76,10 @@ app.get("/scrape", function(req, res) {
 
     // If we were able to successfully scrape and save an Article, send a message to the client
     res.send("Scrape Complete");
+  })
+  .catch(function(err){
+    console.error('error from URL: ', err.message);
+    res.send('scrape error');
   });
 });
 console.log('test2')

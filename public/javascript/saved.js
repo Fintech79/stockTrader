@@ -1,7 +1,7 @@
 // Appending this data to the page
 articleContainer.append(emptyAlert);
-}
 
+ 
 function renderNotesList(data) {
   // This function handles rendering note list items to our notes modal
   // Setting up an array of notes to render after finished
